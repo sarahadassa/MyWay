@@ -1,6 +1,4 @@
-// MyWay — script.js
-
-// Estado da aplicação
+// Estado da aplicacao
 let estado = {
   perfil:       {},
   habilidades:  [],
@@ -9,7 +7,7 @@ let estado = {
   experiencias: []
 };
 
-// Ao carregar a página
+// Ao carregar a pagina
 document.addEventListener('DOMContentLoaded', () => {
   carregarEstado();
   if (estado.perfil.nome) {
@@ -19,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// localStorage
+// localStorage - armazenamento local
 function salvarEstado() {
   localStorage.setItem('myway', JSON.stringify(estado));
 }
@@ -29,7 +27,7 @@ function carregarEstado() {
   if (salvo) estado = JSON.parse(salvo);
 }
 
-// Navegação de telas
+// Navegacao de telas
 function mostrarTela(nome) {
   document.getElementById('tela-entrada').style.display   = nome === 'entrada'   ? 'block' : 'none';
   document.getElementById('tela-dashboard').style.display = nome === 'dashboard' ? 'block' : 'none';
@@ -172,7 +170,7 @@ function renderizarCertificados() {
   `).join('');
 }
 
-// Experiências
+// Experiencias
 function adicionarExperiencia() {
   const cargo   = document.getElementById('exp-cargo').value.trim();
   const empresa = document.getElementById('exp-empresa').value.trim();
@@ -212,7 +210,7 @@ function renderizarExperiencias() {
   `).join('');
 }
 
-// Vagas — Fetch na Remotive API (gratuita, sem chave)
+// Vagas — Fetch na Remotive API (https://remotive.com/api/remote-jobs) - busca de vagas
 async function buscarVagas() {
   const termo     = document.getElementById('vagas-busca').value.trim();
   const resultado = document.getElementById('vagas-resultado');
@@ -247,7 +245,7 @@ async function buscarVagas() {
   }
 }
 
-// Dashboard
+// Dash
 function atualizarDashboard() {
   document.getElementById('total-projetos').textContent     = estado.projetos.length;
   document.getElementById('total-certificados').textContent = estado.certificados.length;
