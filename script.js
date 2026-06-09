@@ -172,8 +172,10 @@ window.salvarPerfil = () => {
   estado.perfil.nome     = document.getElementById('perfil-nome').value;
   estado.perfil.area     = document.getElementById('perfil-area').value;
   estado.perfil.bio      = document.getElementById('perfil-bio').value;
-  estado.perfil.linkedin = document.getElementById('perfil-linkedin').value.trim();
-  estado.perfil.github   = document.getElementById('perfil-github').value.trim();
+  estado.perfil.linkedin = document.getElementById('perfil-linkedin').value.trim()
+  .replace(/^https?:\/\/(www\.)?linkedin\.com\/in\/?/, '').replace(/\/$/, '');
+  estado.perfil.github   = document.getElementById('perfil-github').value.trim()
+  .replace(/^https?:\/\/(www\.)?github\.com\/?/, '').replace(/\/$/, '');
 
   atualizarCabecalho();
 
@@ -374,10 +376,15 @@ window.adicionarCertificado = async () => {
     return;
   }
 
-  if (!arquivo) {
-    flash('Selecione uma imagem do certificado!');
-    return;
-  }
+ if (!arquivo) {
+  flash('Selecione uma imagem do certificado!');
+  return;
+}
+
+if (arquivo.size > 5 * 1024 * 1024) {
+  flash('Imagem muito grande. Máximo: 5 MB.');
+  return;
+}
 
   try {
     flash('Enviando certificado...');
