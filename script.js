@@ -27,6 +27,21 @@ const db   = getFirestore(app);
 const CLOUD_NAME    = "dt88i9c7n";
 const UPLOAD_PRESET = "myway-web";
 
+window.flash = function(msg, tipo = 'erro') {
+  const t = document.createElement('div');
+  t.textContent = msg;
+  Object.assign(t.style, {
+    position: 'fixed', bottom: '24px', right: '24px',
+    background: tipo === 'sucesso' ? '#16A34A' : '#111111',
+    color: 'white', padding: '12px 20px', borderRadius: '10px',
+    fontSize: '14px', fontFamily: "'DM Sans', sans-serif",
+    zIndex: '9999', boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
+    maxWidth: '320px'
+  });
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+
 // ─── Estado ──────────────────────────────
 
 let uid    = null;
@@ -154,21 +169,19 @@ async function salvarPerfilNoFirebase() {
 }
 
 window.salvarPerfil = () => {
-  estado.perfil.nome = document.getElementById('perfil-nome').value;
-  estado.perfil.area = document.getElementById('perfil-area').value;
-  estado.perfil.bio = document.getElementById('perfil-bio').value;
-
-  const linkedinUser = document.getElementById('perfil-linkedin').value.trim();
-  estado.perfil.linkedin = linkedinUser;
-
-  const githubUser = document.getElementById('perfil-github').value.trim();
-  estado.perfil.github = githubUser;
+  estado.perfil.nome     = document.getElementById('perfil-nome').value;
+  estado.perfil.area     = document.getElementById('perfil-area').value;
+  estado.perfil.bio      = document.getElementById('perfil-bio').value;
+  estado.perfil.linkedin = document.getElementById('perfil-linkedin').value.trim();
+  estado.perfil.github   = document.getElementById('perfil-github').value.trim();
 
   atualizarCabecalho();
-  renderizarPreviewPortfolio();
 
   clearTimeout(timerPerfil);
-  timerPerfil = setTimeout(salvarPerfilNoFirebase, 1000);
+  timerPerfil = setTimeout(() => {
+    renderizarPreviewPortfolio();
+    salvarPerfilNoFirebase();
+  }, 500);
 };
 
 // ─── Upload de foto ──────────────────────
@@ -233,7 +246,7 @@ function renderizarFotosPerfil() {
   const preview = document.getElementById('foto-preview-el');
   if (preview) {
     preview.innerHTML = url
-      ? `<img src="${escapeHtml(url)}" alt="Foto de perfil" />`
+      ? `<img src="${escapeHtml(otimizarImagem(url, 100))}" alt="Foto de perfil" />`
       : iniciais;
   }
 }
@@ -375,10 +388,7 @@ window.adicionarCertificado = async () => {
 
     const response = await fetch(
       `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
-      {
-        method: "POST",
-        body: formData
-      }
+      { method: "POST", body: formData }
     );
 
     const upload = await response.json();
@@ -401,23 +411,13 @@ window.adicionarCertificado = async () => {
       dados
     );
 
-    estado.certificados.unshift({
-      id: refDoc.id,
-      ...dados
-    });
+    estado.certificados.unshift({ id: refDoc.id, ...dados });
 
     renderizarCertificados();
     renderizarPreviewPortfolio();
-
-    limparCampos([
-      'cert-nome',
-      'cert-inst',
-      'cert-data'
-    ]);
-
+    limparCampos(['cert-nome', 'cert-inst', 'cert-data']);
     document.getElementById('cert-area').value = '';
     document.getElementById('cert-imagem').value = '';
-
     flash('Certificado salvo! ✓', 'sucesso');
 
   } catch (erro) {
@@ -442,44 +442,25 @@ function renderizarCertificados() {
   }
 
   const icones = {
-    'Desenvolvimento Web': '🌐',
-    'Mobile': '📱',
-    'Data Science': '📊',
-    'Design': '🎨',
-    'DevOps': '⚙️',
-    'Idiomas': '🌍',
-    'Outro': '🏅'
+    'Desenvolvimento Web': '🌐', 'Mobile': '📱', 'Data Science': '📊',
+    'Design': '🎨', 'DevOps': '⚙️', 'Idiomas': '🌍', 'Outro': '🏅'
   };
 
   const corBadge = {
-    'Desenvolvimento Web': 'azul',
-    'Mobile': 'roxo',
-    'Data Science': 'amber',
-    'Design': 'roxo',
-    'DevOps': 'verde',
-    'Idiomas': 'verde',
-    'Outro': ''
+    'Desenvolvimento Web': 'azul', 'Mobile': 'roxo', 'Data Science': 'amber',
+    'Design': 'roxo', 'DevOps': 'verde', 'Idiomas': 'verde', 'Outro': ''
   };
 
   lista.innerHTML = estado.certificados.map(c => {
-
-    const imgOk =
-      typeof c.imagemUrl === 'string' &&
-      c.imagemUrl.trim().startsWith('http');
-
+    const imgOk = typeof c.imagemUrl === 'string' && c.imagemUrl.trim().startsWith('http');
     return `
       <div class="item-card">
         <div class="item-card-header">
           <div style="display:flex;align-items:center;gap:14px">
-
-            ${
-              imgOk
-                ? `<img src="${c.imagemUrl}"
-                    alt="Certificado"
-                    style="width:42px;height:42px;object-fit:cover;border-radius:8px;" />`
-                : `<span style="font-size:24px">${icones[c.area] || '🏆'}</span>`
+            ${imgOk
+              ? `<img src="${escapeHtml(otimizarImagem(c.imagemUrl, 80))}" alt="Certificado" style="width:42px;height:42px;object-fit:cover;border-radius:8px;" />`
+              : `<span style="font-size:24px">${icones[c.area] || '🏆'}</span>`
             }
-
             <div>
               <div class="item-card-titulo">${escapeHtml(c.nome)}</div>
               <div class="item-card-sub">
@@ -487,25 +468,16 @@ function renderizarCertificados() {
               </div>
             </div>
           </div>
-
-          <button class="btn-excluir" onclick="removerCertificado('${c.id}')">
-            Excluir
-          </button>
+          <button class="btn-excluir" onclick="removerCertificado('${c.id}')">Excluir</button>
         </div>
-
         <div class="item-card-footer">
-          ${
-            c.area
-              ? `<span class="badge ${corBadge[c.area] || ''}">
-                   ${escapeHtml(c.area)}
-                 </span>`
-              : ''
-          }
+          ${c.area ? `<span class="badge ${corBadge[c.area] || ''}">${escapeHtml(c.area)}</span>` : ''}
         </div>
       </div>
     `;
   }).join('');
 }
+
 // ─── Experiências ────────────────────────
 
 window.adicionarExperiencia = async () => {
@@ -571,15 +543,13 @@ function renderizarPreviewPortfolio() {
   const nome     = p.nome || '';
   const iniciais = nome.split(' ').slice(0,2).map(x => x[0]).join('').toUpperCase() || '?';
 
-  // Avatar
   const pvAvatar = document.getElementById('pv-avatar');
   if (pvAvatar) {
     pvAvatar.innerHTML = p.fotoUrl
-      ? `<img src="${escapeHtml(p.fotoUrl)}" alt="" />`
+      ? `<img src="${escapeHtml(otimizarImagem(p.fotoUrl, 100))}" alt="" />`
       : iniciais;
   }
 
-  // Dados textuais
   const pvNome = document.getElementById('pv-nome');
   const pvArea = document.getElementById('pv-area');
   const pvBio  = document.getElementById('pv-bio');
@@ -587,7 +557,6 @@ function renderizarPreviewPortfolio() {
   if (pvArea) pvArea.textContent = p.area || '';
   if (pvBio)  pvBio.textContent  = p.bio  || '';
 
-  // Links
   const pvLinks = document.getElementById('pv-links');
   if (pvLinks) {
     const links = [];
@@ -600,48 +569,43 @@ function renderizarPreviewPortfolio() {
     pvLinks.innerHTML = links.join('');
   }
 
-  // Completude
   let pct = 0;
-  if (p.fotoUrl)                     pct += 10;
-  if (p.nome)                        pct += 10;
-  if (p.area)                        pct += 10;
-  if (p.bio)                         pct += 15;
-  if (p.linkedin)                    pct += 5;
-  if (p.github)                      pct += 5;
-  if (estado.habilidades.length >= 1) pct += 15;
-  if (estado.projetos.length >= 1)    pct += 15;
+  if (p.fotoUrl)                      pct += 10;
+  if (p.nome)                         pct += 10;
+  if (p.area)                         pct += 10;
+  if (p.bio)                          pct += 15;
+  if (p.linkedin)                     pct += 5;
+  if (p.github)                       pct += 5;
+  if (estado.habilidades.length >= 1)  pct += 15;
+  if (estado.projetos.length >= 1)     pct += 15;
   if (estado.certificados.length >= 1) pct += 10;
   if (estado.experiencias.length >= 1) pct += 5;
 
-  const pvPct  = document.getElementById('pv-pct');
+  const pvPct   = document.getElementById('pv-pct');
   const pvBarra = document.getElementById('pv-barra');
   const pvDica  = document.getElementById('pv-dica');
-  if (pvPct)  pvPct.textContent   = pct + '%';
-  if (pvBarra) pvBarra.style.width = pct + '%';
+  if (pvPct)   pvPct.textContent    = pct + '%';
+  if (pvBarra) pvBarra.style.width  = pct + '%';
   if (pvDica) {
     let dica = '🎉 Perfil completo! Compartilhe seu portfólio.';
-    if (pct < 20)  dica = 'Adicione uma foto e preencha seu nome e área.';
-    else if (pct < 40) dica = 'Escreva sua biografia e adicione habilidades.';
-    else if (pct < 60) dica = 'Adicione seus primeiros projetos ao portfólio.';
-    else if (pct < 80) dica = 'Adicione certificados e redes sociais.';
+    if (pct < 20)       dica = 'Adicione uma foto e preencha seu nome e área.';
+    else if (pct < 40)  dica = 'Escreva sua biografia e adicione habilidades.';
+    else if (pct < 60)  dica = 'Adicione seus primeiros projetos ao portfólio.';
+    else if (pct < 80)  dica = 'Adicione certificados e redes sociais.';
     else if (pct < 100) dica = 'Quase lá! Adicione experiências para completar.';
     pvDica.textContent = dica;
   }
 
-  // Habilidades
   const pvSkills = document.getElementById('pv-skills');
   const pvSecHab = document.getElementById('pv-sec-habilidades');
   if (pvSkills && pvSecHab) {
-    if (estado.habilidades.length === 0) {
-      pvSkills.innerHTML = '<div class="pv-vazio">Adicione habilidades no Editar Perfil.</div>';
-    } else {
-      pvSkills.innerHTML = estado.habilidades.map(h =>
-        `<span class="pv-skill-tag"><span class="pv-skill-dot"></span>${escapeHtml(h.nome)}</span>`
-      ).join('');
-    }
+    pvSkills.innerHTML = estado.habilidades.length === 0
+      ? '<div class="pv-vazio">Adicione habilidades no Editar Perfil.</div>'
+      : estado.habilidades.map(h =>
+          `<span class="pv-skill-tag"><span class="pv-skill-dot"></span>${escapeHtml(h.nome)}</span>`
+        ).join('');
   }
 
-  // Projetos
   const pvProj    = document.getElementById('pv-projetos');
   const pvSecProj = document.getElementById('pv-sec-projetos');
   if (pvProj && pvSecProj) {
@@ -666,7 +630,6 @@ function renderizarPreviewPortfolio() {
     }
   }
 
-  // Certificados
   const pvCerts    = document.getElementById('pv-certificados');
   const pvSecCerts = document.getElementById('pv-sec-certificados');
   if (pvCerts && pvSecCerts) {
@@ -677,21 +640,24 @@ function renderizarPreviewPortfolio() {
     if (estado.certificados.length === 0) {
       pvCerts.innerHTML = '<div class="pv-vazio">Adicione certificados na seção Certificados.</div>';
     } else {
-        pvCerts.innerHTML = estado.certificados.map(c => `<div class="pv-cert-card">${c.imagemUrl ? `<img src="${escapeHtml(c.imagemUrl)}" class="pv-cert-img" />` : `<div class="pv-cert-icone">${icones[c.area] || '🏆'}</div>`}
-        <div class="pv-cert-info">
-          <div class="pv-cert-nome">${escapeHtml(c.nome)}</div>
-          <div class="pv-cert-sub">
-            ${escapeHtml(c.inst)}${c.data ? ' · ' + formatarData(c.data) : ''}
+      pvCerts.innerHTML = estado.certificados.map(c => `
+        <div class="pv-cert-card">
+          ${c.imagemUrl
+            ? `<img src="${escapeHtml(otimizarImagem(c.imagemUrl, 80))}" class="pv-cert-img" />`
+            : `<div class="pv-cert-icone">${icones[c.area] || '🏆'}</div>`
+          }
+          <div class="pv-cert-info">
+            <div class="pv-cert-nome">${escapeHtml(c.nome)}</div>
+            <div class="pv-cert-sub">
+              ${escapeHtml(c.inst)}${c.data ? ' · ' + formatarData(c.data) : ''}
+            </div>
           </div>
+          ${c.area ? `<span class="pv-cert-badge">${escapeHtml(c.area)}</span>` : ''}
         </div>
-
-        ${c.area ? `<span class="pv-cert-badge">${escapeHtml(c.area)}</span>` : ''}
-      </div>
-    `).join('');
+      `).join('');
     }
   }
 
-  // Experiências
   const pvExp    = document.getElementById('pv-experiencias');
   const pvSecExp = document.getElementById('pv-sec-experiencias');
   if (pvExp && pvSecExp) {
@@ -767,7 +733,7 @@ function atualizarCabecalho() {
   const sidebarAvatar = document.getElementById('sidebar-avatar-el');
   if (sidebarAvatar) {
     sidebarAvatar.innerHTML = fotoUrl
-      ? `<img src="${escapeHtml(fotoUrl)}" alt="" />`
+      ? `<img src="${escapeHtml(otimizarImagem(fotoUrl, 80))}" alt="" />`
       : iniciais;
   }
 }
@@ -804,11 +770,21 @@ function escapeHtml(str) {
     .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
+function otimizarImagem(url, largura = 200) {
+  if (!url || !url.includes('cloudinary.com')) return url;
+  return url.replace('/upload/', `/upload/w_${largura},h_${largura},c_fill,q_auto,f_auto/`);
+}
+
 function formatarData(aaaamm) {
   if (!aaaamm) return '';
-  const [ano, mes] = aaaamm.split('-');
+  const partes = aaaamm.split('-');
+  const ano = partes[0];
+  const mes = partes[1];
+  if (!mes) return ano;
   const meses = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-  return `${meses[parseInt(mes)-1]} ${ano}`;
+  const nomeMes = meses[parseInt(mes) - 1];
+  if (!nomeMes) return ano;
+  return `${nomeMes} ${ano}`;
 }
 
 function formatarTechs(tech) {
@@ -819,19 +795,3 @@ function formatarTechs(tech) {
 function limparCampos(ids) {
   ids.forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
 }
-
-function flash(msg, tipo = 'erro') {
-  const t = document.createElement('div');
-  t.textContent = msg;
-  Object.assign(t.style, {
-    position: 'fixed', bottom: '24px', right: '24px',
-    background: tipo === 'sucesso' ? '#16A34A' : '#111111',
-    color: 'white', padding: '12px 20px', borderRadius: '10px',
-    fontSize: '14px', fontFamily: "'DM Sans', sans-serif",
-    zIndex: '9999', boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
-    maxWidth: '320px'
-  });
-  document.body.appendChild(t);
-  setTimeout(() => t.remove(), 3000);
-}
-
