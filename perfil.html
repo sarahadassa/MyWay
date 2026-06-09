@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MyWay — Portfólio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0E0E10;
+      --bg2:       #16161A;
+      --bg3:       #1E1E24;
+      --borda:     rgba(255,255,255,0.07);
+      --texto:     #F2F2F4;
+      --texto2:    #9898A8;
+      --texto3:    #55555F;
+      --acento:    #6C63FF;
+      --acento2:   #A89CFF;
+      --acento-bg: rgba(108,99,255,0.12);
+      --verde:     #34D399;
+      --verde-bg:  rgba(52,211,153,0.1);
+      --fonte-d:   'DM Serif Display', serif;
+      --fonte-b:   'DM Sans', sans-serif;
+      --raio:      14px;
+      --raio-lg:   22px;
+    }
+
+    body {
+      font-family: var(--fonte-b);
+      background: var(--bg);
+      color: var(--texto);
+      line-height: 1.65;
+      font-size: 15px;
+      min-height: 100vh;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      padding: 72px 24px 56px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(108,99,255,0.22) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-noise {
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none; opacity: 0.4;
+    }
+
+    .avatar-ring {
+      position: relative; width: 108px; height: 108px; margin-bottom: 20px;
+    }
+
+    .avatar-ring::before {
+      content: ''; position: absolute; inset: -3px; border-radius: 50%;
+      background: conic-gradient(from 0deg, var(--acento), var(--verde), var(--acento));
+      animation: spin 6s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .avatar-img {
+      position: absolute; inset: 3px; border-radius: 50%;
+      background: var(--bg3);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--fonte-d); font-size: 38px; color: var(--acento2);
+      overflow: hidden;
+    }
+
+    .avatar-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+
+    .status-dot {
+      position: absolute; bottom: 6px; right: 6px;
+      width: 14px; height: 14px; background: var(--verde);
+      border: 2px solid var(--bg); border-radius: 50%; z-index: 2;
+    }
+
+    .hero-nome {
+      font-family: var(--fonte-d);
+      font-size: clamp(28px, 5vw, 44px);
+      color: var(--texto); letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 8px;
+    }
+
+    .hero-area { font-size: 15px; color: var(--acento2); font-weight: 500; margin-bottom: 16px; letter-spacing: 0.02em; }
+
+    .hero-bio { max-width: 560px; font-size: 15px; color: var(--texto2); line-height: 1.75; margin-bottom: 28px; }
+
+    .hero-links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+
+    .hero-link {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 9px 18px; border-radius: 100px;
+      font-size: 13px; font-weight: 500; text-decoration: none;
+      transition: all 0.2s; font-family: var(--fonte-b);
+    }
+
+    .hero-link.primario   { background: var(--acento); color: white; }
+    .hero-link.primario:hover { background: #7C74FF; transform: translateY(-1px); }
+    .hero-link.secundario { background: var(--bg3); color: var(--texto2); border: 1px solid var(--borda); }
+    .hero-link.secundario:hover { color: var(--texto); border-color: rgba(255,255,255,0.2); transform: translateY(-1px); }
+
+    /* ── NAV ÂNCORA ── */
+    .nav-ancora {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(14,14,16,0.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--borda);
+    }
+
+    .nav-ancora-inner {
+      max-width: 900px; margin: 0 auto; padding: 0 24px;
+      display: flex; overflow-x: auto; scrollbar-width: none;
+    }
+    .nav-ancora-inner::-webkit-scrollbar { display: none; }
+
+    .ancora-btn {
+      padding: 14px 18px; background: none; border: none;
+      color: var(--texto3); font-family: var(--fonte-b);
+      font-size: 13px; font-weight: 500; cursor: pointer;
+      transition: color 0.15s; white-space: nowrap; position: relative;
+    }
+
+    .ancora-btn::after {
+      content: ''; position: absolute; bottom: 0; left: 18px; right: 18px;
+      height: 2px; background: var(--acento);
+      transform: scaleX(0); transition: transform 0.2s; border-radius: 2px;
+    }
+
+    .ancora-btn:hover { color: var(--texto2); }
+    .ancora-btn.active { color: var(--texto); }
+    .ancora-btn.active::after { transform: scaleX(1); }
+
+    /* ── CONTAINER ── */
+    .container { max-width: 900px; margin: 0 auto; padding: 0 24px 80px; }
+
+    /* ── SECTION ── */
+    .secao { padding-top: 64px; }
+
+    .secao-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--acento2); margin-bottom: 8px;
+    }
+
+    .secao-titulo {
+      font-family: var(--fonte-d); font-size: 26px; color: var(--texto);
+      font-weight: 400; margin-bottom: 28px; line-height: 1.2;
+    }
+
+    /* ── HABILIDADES ── */
+    .skills-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+
+    .skill-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 16px; background: var(--bg2);
+      border: 1px solid var(--borda); border-radius: 100px;
+      font-size: 13px; color: var(--texto2); transition: all 0.2s;
+    }
+
+    .skill-tag:hover {
+      background: var(--acento-bg); border-color: rgba(108,99,255,0.3);
+      color: var(--acento2); transform: translateY(-1px);
+    }
+
+    .skill-dot { width: 6px; height: 6px; background: var(--acento); border-radius: 50%; }
+
+    /* ── PROJETOS ── */
+    .projetos-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px;
+    }
+
+    .projeto-card {
+      background: var(--bg2); border: 1px solid var(--borda);
+      border-radius: var(--raio-lg); padding: 24px;
+      transition: all 0.25s; position: relative; overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+
+    .projeto-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--acento), var(--verde));
+      opacity: 0; transition: opacity 0.2s;
+    }
+
+    .projeto-card:hover {
+      border-color: rgba(108,99,255,0.25); transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+    }
+    .projeto-card:hover::before { opacity: 1; }
+
+    .projeto-destaque-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
+      color: var(--verde); text-transform: uppercase; margin-bottom: 12px;
+    }
+
+    .projeto-nome { font-size: 16px; font-weight: 600; color: var(--texto); margin-bottom: 8px; }
+    .projeto-desc { font-size: 13px; color: var(--texto2); line-height: 1.7; flex: 1; margin-bottom: 16px; }
+
+    .projeto-techs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+
+    .tech-tag {
+      padding: 3px 10px; background: var(--acento-bg);
+      border: 1px solid rgba(108,99,255,0.2); border-radius: 100px;
+      font-size: 11px; color: var(--acento2); font-weight: 500;
+    }
+
+    .projeto-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 13px; color: var(--acento2); text-decoration: none;
+      font-weight: 500; transition: color 0.15s; margin-top: auto;
+    }
+    .projeto-link:hover { color: var(--texto); }
+
+    /* ── CERTIFICADOS ── */
+    .certs-lista { display: flex; flex-direction: column; gap: 12px; }
+
+    .cert-card {
+      background: var(--bg2); border: 1px solid var(--borda);
+      border-radius: var(--raio); padding: 18px 22px;
+      display: flex; align-items: center; gap: 18px; transition: all 0.2s;
+    }
+    .cert-card:hover { border-color: rgba(108,99,255,0.2); transform: translateX(4px); }
+
+    .cert-icone {
+      width: 44px; height: 44px; background: var(--verde-bg);
+      border-radius: 12px; display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+
+    .cert-info { flex: 1; }
+    .cert-nome { font-size: 14px; font-weight: 600; color: var(--texto); margin-bottom: 3px; }
+    .cert-sub  { font-size: 13px; color: var(--texto2); }
+
+    .cert-badge {
+      padding: 4px 12px; background: var(--verde-bg);
+      border: 1px solid rgba(52,211,153,0.2); border-radius: 100px;
+      font-size: 12px; color: var(--verde); font-weight: 500; white-space: nowrap;
+    }
+
+    /* ── EXPERIÊNCIAS ── */
+    .exp-lista { position: relative; padding-left: 28px; }
+
+    .exp-lista::before {
+      content: ''; position: absolute; top: 8px; bottom: 8px; left: 6px;
+      width: 1px; background: linear-gradient(to bottom, var(--acento), transparent);
+    }
+
+    .exp-item { position: relative; margin-bottom: 36px; }
+    .exp-item:last-child { margin-bottom: 0; }
+
+    .exp-dot {
+      position: absolute; left: -27px; top: 6px;
+      width: 12px; height: 12px; background: var(--acento);
+      border-radius: 50%; border: 2px solid var(--bg);
+      box-shadow: 0 0 0 3px var(--acento-bg);
+    }
+
+    .exp-periodo { font-size: 12px; color: var(--texto3); font-weight: 500; letter-spacing: 0.04em; margin-bottom: 6px; }
+    .exp-cargo   { font-size: 15px; font-weight: 600; color: var(--texto); margin-bottom: 2px; }
+    .exp-empresa { font-size: 13px; color: var(--acento2); margin-bottom: 8px; font-weight: 500; }
+    .exp-desc    { font-size: 13px; color: var(--texto2); line-height: 1.7; }
+
+    .exp-tipo {
+      display: inline-flex; align-items: center; gap: 4px; margin-top: 8px;
+      padding: 3px 10px; border-radius: 100px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+    }
+    .exp-tipo.profissional    { background: var(--acento-bg); color: var(--acento2); }
+    .exp-tipo.academica       { background: rgba(251,191,36,0.1); color: #FCD34D; }
+    .exp-tipo.voluntario      { background: var(--verde-bg); color: var(--verde); }
+    .exp-tipo.extracurricular { background: rgba(244,114,182,0.1); color: #F9A8D4; }
+
+    /* ── ESTADO VAZIO ── */
+    .vazio {
+      text-align: center; padding: 40px 20px;
+      color: var(--texto3); font-size: 14px;
+      background: var(--bg2); border: 1px dashed rgba(255,255,255,0.06);
+      border-radius: var(--raio);
+    }
+
+    /* ── LOADING / 404 ── */
+    #loading-screen {
+      position: fixed; inset: 0; background: var(--bg);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 16px; z-index: 999; transition: opacity 0.4s;
+    }
+
+    .loader-logo { font-family: var(--fonte-d); font-size: 32px; color: var(--texto); }
+
+    .loader-bar { width: 120px; height: 2px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
+    .loader-bar-fill {
+      height: 100%; background: linear-gradient(90deg, var(--acento), var(--verde));
+      animation: load 1.2s ease forwards;
+    }
+    @keyframes load { from { width: 0% } to { width: 100% } }
+
+    /* ── FOOTER ── */
+    .footer {
+      text-align: center; padding: 24px; font-size: 13px;
+      color: var(--texto3); border-top: 1px solid var(--borda); margin-top: 40px;
+    }
+    .footer a { color: var(--acento2); text-decoration: none; }
+
+    /* ── RESPONSIVO ── */
+    @media (max-width: 640px) {
+      .projetos-grid { grid-template-columns: 1fr; }
+      .cert-card { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="loading-screen">
+  <div class="loader-logo">MyWay</div>
+  <div class="loader-bar"><div class="loader-bar-fill"></div></div>
+</div>
+
+<div id="erro-404" style="display:none; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; gap:12px; text-align:center; padding:24px;">
+  <span style="font-size:48px;">🔍</span>
+  <h2 style="font-family:var(--fonte-d); font-size:26px; font-weight:400;">Portfólio não encontrado</h2>
+  <p style="color:var(--texto2); max-width:320px;">Verifique o link ou peça ao dono do portfólio para compartilhá-lo novamente.</p>
+  <a href="index.html" style="margin-top:8px; color:var(--acento2); text-decoration:none; font-size:14px;">← Criar meu portfólio no MyWay</a>
+</div>
+
+<div id="portfolio-content" style="display:none;">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-noise"></div>
+    <div class="avatar-ring">
+      <div class="avatar-img" id="avatar-hero"></div>
+      <div class="status-dot" title="Disponível para oportunidades"></div>
+    </div>
+    <h1 class="hero-nome" id="hero-nome">—</h1>
+    <p class="hero-area" id="hero-area"></p>
+    <p class="hero-bio"  id="hero-bio"></p>
+    <div class="hero-links" id="hero-links"></div>
+  </div>
+
+  <!-- NAV ÂNCORA -->
+  <nav class="nav-ancora">
+    <div class="nav-ancora-inner" id="nav-ancora-inner"></div>
+  </nav>
+
+  <!-- CONTEÚDO -->
+  <div class="container">
+
+    <section class="secao" id="sec-habilidades">
+      <div class="secao-label">Stack & Skills</div>
+      <h2 class="secao-titulo">Habilidades</h2>
+      <div class="skills-grid" id="skills-grid"></div>
+    </section>
+
+    <section class="secao" id="sec-projetos">
+      <div class="secao-label">Trabalhos</div>
+      <h2 class="secao-titulo">Portfólio</h2>
+      <div class="projetos-grid" id="projetos-grid"></div>
+    </section>
+
+    <section class="secao" id="sec-certificados">
+      <div class="secao-label">Formação</div>
+      <h2 class="secao-titulo">Certificados</h2>
+      <div class="certs-lista" id="certs-lista"></div>
+    </section>
+
+    <section class="secao" id="sec-experiencias">
+      <div class="secao-label">Trajetória</div>
+      <h2 class="secao-titulo">Experiências</h2>
+      <div class="exp-lista" id="exp-lista"></div>
+    </section>
+
+  </div>
+
+  <footer class="footer">
+    Portfólio criado com <a href="index.html">MyWay</a> ·
+    <a href="index.html" style="margin-left:4px;">Crie o seu grátis →</a>
+  </footer>
+
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, doc, getDoc, collection, getDocs, query, orderBy }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCGfBv2-jMES3oO6FKJZfmND0WmLQXBCyU",
+    authDomain: "myway-14fc3.firebaseapp.com",
+    projectId: "myway-14fc3",
+    storageBucket: "myway-14fc3.firebasestorage.app",
+    messagingSenderId: "501109982710",
+    appId: "1:501109982710:web:33ed9300843fb0e975f3d7"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getFirestore(app);
+
+  const params = new URLSearchParams(location.search);
+  const uid    = params.get('uid');
+
+  async function carregar() {
+    if (!uid) { mostrarErro(); return; }
+
+    try {
+      const snap = await getDoc(doc(db, 'usuarios', uid));
+      if (!snap.exists()) { mostrarErro(); return; }
+
+      const d      = snap.data();
+      const perfil = d.perfil      || {};
+      const skills = d.habilidades || [];
+
+      const [projSnap, certSnap, expSnap] = await Promise.all([
+        getDocs(query(collection(db, 'usuarios', uid, 'projetos'),     orderBy('criadoEm', 'desc'))),
+        getDocs(query(collection(db, 'usuarios', uid, 'certificados'), orderBy('criadoEm', 'desc'))),
+        getDocs(query(collection(db, 'usuarios', uid, 'experiencias'), orderBy('criadoEm', 'desc')))
+      ]);
+
+      const projetos     = projSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+      const certificados = certSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+      const experiencias = expSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+      if (perfil.nome) document.title = `${perfil.nome} — MyWay`;
+
+      renderHero(perfil);
+      renderNav(skills, projetos, certificados, experiencias);
+      renderSkills(skills);
+      renderProjetos(projetos);
+      renderCertificados(certificados);
+      renderExperiencias(experiencias);
+
+      const loading = document.getElementById('loading-screen');
+      loading.style.opacity = '0';
+      setTimeout(() => loading.style.display = 'none', 400);
+      document.getElementById('portfolio-content').style.display = 'block';
+
+      ativarNavScroll();
+
+    } catch (e) {
+      console.error(e);
+      mostrarErro();
+    }
+  }
+
+  function mostrarErro() {
+    document.getElementById('loading-screen').style.display = 'none';
+    document.getElementById('erro-404').style.display = 'flex';
+  }
+
+  function esc(str) {
+    if (!str) return '';
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function formatarData(aaaamm) {
+    if (!aaaamm) return '';
+    const [ano, mes] = aaaamm.split('-');
+    const meses = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+    return `${meses[parseInt(mes)-1]} ${ano}`;
+  }
+
+  function renderHero(p) {
+    const iniciais = (p.nome || '?').split(' ').slice(0,2).map(s => s[0]).join('').toUpperCase();
+
+    const avatarEl = document.getElementById('avatar-hero');
+    if (p.fotoUrl) {
+      avatarEl.innerHTML = `<img src="${esc(p.fotoUrl)}" alt="${esc(p.nome)}" />`;
+    } else {
+      avatarEl.textContent = iniciais;
+    }
+
+    document.getElementById('hero-nome').textContent = p.nome || 'Portfólio';
+    document.getElementById('hero-area').textContent = p.area || '';
+    document.getElementById('hero-bio').textContent  = p.bio  || '';
+
+    const linksEl = document.getElementById('hero-links');
+    const links   = [];
+    if (p.linkedin) links.push(`<a href="${esc(p.linkedin)}" target="_blank" rel="noopener" class="hero-link primario">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+      LinkedIn</a>`);
+    if (p.github) links.push(`<a href="${esc(p.github)}" target="_blank" rel="noopener" class="hero-link secundario">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+      GitHub</a>`);
+    linksEl.innerHTML = links.join('');
+  }
+
+  function renderNav(skills, projetos, certificados, experiencias) {
+    const secoes = [
+      { id: 'sec-habilidades',  label: 'Habilidades',  show: skills.length > 0 },
+      { id: 'sec-projetos',     label: 'Portfólio',    show: projetos.length > 0 },
+      { id: 'sec-certificados', label: 'Certificados', show: certificados.length > 0 },
+      { id: 'sec-experiencias', label: 'Experiências', show: experiencias.length > 0 },
+    ];
+
+    const nav = document.getElementById('nav-ancora-inner');
+    nav.innerHTML = secoes
+      .filter(s => s.show)
+      .map(s => `<button class="ancora-btn" data-target="${s.id}" onclick="irPara('${s.id}')">${s.label}</button>`)
+      .join('');
+
+    secoes.forEach(s => {
+      if (!s.show) document.getElementById(s.id).style.display = 'none';
+    });
+  }
+
+  window.irPara = (id) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  function ativarNavScroll() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          document.querySelectorAll('.ancora-btn').forEach(b => {
+            b.classList.toggle('active', b.dataset.target === id);
+          });
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+
+    document.querySelectorAll('.secao').forEach(s => observer.observe(s));
+  }
+
+  function renderSkills(skills) {
+    const grid = document.getElementById('skills-grid');
+    if (skills.length === 0) {
+      grid.innerHTML = '<div class="vazio">Nenhuma habilidade adicionada ainda.</div>'; return;
+    }
+    grid.innerHTML = skills.map(h =>
+      `<span class="skill-tag"><span class="skill-dot"></span>${esc(h.nome)}</span>`
+    ).join('');
+  }
+
+  function renderProjetos(projetos) {
+    const grid = document.getElementById('projetos-grid');
+    if (projetos.length === 0) {
+      grid.innerHTML = '<div class="vazio">Nenhum projeto adicionado ainda.</div>'; return;
+    }
+
+    const ordenados = [...projetos].sort((a, b) => (b.destaque ? 1 : 0) - (a.destaque ? 1 : 0));
+
+    grid.innerHTML = ordenados.map(p => {
+      const destaque = p.destaque ? `<div class="projeto-destaque-badge">⭐ Destaque</div>` : '';
+      const techs = p.tech
+        ? p.tech.split(/[,;]+/).map(t => t.trim()).filter(Boolean)
+            .map(t => `<span class="tech-tag">${esc(t)}</span>`).join('')
+        : '';
+      const link = p.github
+        ? `<a href="${esc(p.github)}" target="_blank" rel="noopener" class="projeto-link">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            Ver código ↗</a>` : '';
+
+      return `
+        <div class="projeto-card">
+          ${destaque}
+          <div class="projeto-nome">${esc(p.nome)}</div>
+          <p class="projeto-desc">${esc(p.desc)}</p>
+          ${techs ? `<div class="projeto-techs">${techs}</div>` : ''}
+          ${link}
+        </div>`;
+    }).join('');
+  }
+
+  function renderCertificados(certs) {
+    const lista = document.getElementById('certs-lista');
+    if (certs.length === 0) {
+      lista.innerHTML = '<div class="vazio">Nenhum certificado adicionado ainda.</div>'; return;
+    }
+    const icones = {
+      'Desenvolvimento Web': '🌐', 'Mobile': '📱', 'Data Science': '📊',
+      'Design': '🎨', 'DevOps': '⚙️', 'Idiomas': '🌍', 'Outro': '🏅'
+    };
+    lista.innerHTML = certs.map(c => `
+      <div class="cert-card">
+        <div class="cert-icone">${icones[c.area] || '🏆'}</div>
+        <div class="cert-info">
+          <div class="cert-nome">${esc(c.nome)}</div>
+          <div class="cert-sub">${esc(c.inst)}${c.data ? ' · ' + formatarData(c.data) : ''}</div>
+        </div>
+        ${c.area ? `<span class="cert-badge">${esc(c.area)}</span>` : ''}
+      </div>
+    `).join('');
+  }
+
+  function renderExperiencias(exps) {
+    const lista = document.getElementById('exp-lista');
+    if (exps.length === 0) {
+      lista.innerHTML = '<div class="vazio">Nenhuma experiência adicionada ainda.</div>'; return;
+    }
+    const tipoLabel = {
+      profissional: 'Profissional', academica: 'Acadêmica',
+      voluntario: 'Voluntariado', extracurricular: 'Extracurricular'
+    };
+    lista.innerHTML = exps.map(e => `
+      <div class="exp-item">
+        <div class="exp-dot"></div>
+        ${e.inicio ? `<div class="exp-periodo">${formatarData(e.inicio)} → ${e.fim ? formatarData(e.fim) : 'Atualmente'}</div>` : ''}
+        <div class="exp-cargo">${esc(e.cargo)}</div>
+        <div class="exp-empresa">${esc(e.empresa)}</div>
+        ${e.desc ? `<p class="exp-desc">${esc(e.desc)}</p>` : ''}
+        <span class="exp-tipo ${e.tipo || 'profissional'}">${tipoLabel[e.tipo] || e.tipo}</span>
+      </div>
+    `).join('');
+  }
+
+  carregar();
+</script>
+</body>
+</html>

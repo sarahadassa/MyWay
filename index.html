@@ -4,109 +4,414 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MyWay — Portfólio Profissional</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- TELA 1 - Entrada -->
-  <div id="tela-entrada">
-    <h1>MyWay</h1>
-    <p>Seu portfólio profissional</p>
+  <!-- ══ TELA AUTH ══ -->
+  <div id="tela-auth">
+    <div class="auth-bg-glow"></div>
+    <div class="entrada-card">
+      <div class="logo-wrap">
+        <div class="logo-mark">M</div>
+        <h1 class="logo-texto">MyWay</h1>
+      </div>
+      <p class="entrada-sub" id="auth-subtitulo">Entre na sua conta</p>
 
-    <label for="input-nome">Seu nome:</label>
-    <input type="text" id="input-nome" placeholder="Ex: Ana Silva" />
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-login"    onclick="trocarTab('login')">Entrar</button>
+        <button class="auth-tab"        id="tab-cadastro" onclick="trocarTab('cadastro')">Criar conta</button>
+      </div>
 
-    <label for="input-area">Área de atuação:</label>
-    <input type="text" id="input-area" placeholder="Ex: Desenvolvedora Front-end" />
+      <div id="campos-cadastro" style="display:none">
+        <div class="form-group">
+          <label for="input-nome">Seu nome</label>
+          <input type="text" id="input-nome" placeholder="Ex: Ana Silva" />
+        </div>
+        <div class="form-group">
+          <label for="input-area">Área de atuação</label>
+          <input type="text" id="input-area" placeholder="Ex: Desenvolvedora Front-end" />
+        </div>
+      </div>
 
-    <button onclick="entrar()">Criar meu portfólio</button>
+      <div class="form-group">
+        <label for="input-email">E-mail</label>
+        <input type="email" id="input-email" placeholder="seu@email.com" onkeydown="if(event.key==='Enter') acaoAuth()" />
+      </div>
+      <div class="form-group">
+        <label for="input-senha">Senha</label>
+        <input type="password" id="input-senha" placeholder="Mínimo 6 caracteres" onkeydown="if(event.key==='Enter') acaoAuth()" />
+      </div>
+
+      <button class="btn-primario full" id="btn-auth" onclick="acaoAuth()">Entrar →</button>
+      <p id="auth-erro" class="auth-erro"></p>
+    </div>
   </div>
 
-  <!-- TELA 2 - Dashboard -->
-  <div id="tela-dashboard" style="display: none;">
+  <!-- ══ DASHBOARD ══ -->
+  <div id="tela-dashboard" style="display:none">
 
-    <header>
-      <h2 id="nome-usuario">Olá!</h2>
-      <p id="area-usuario"></p>
-      <button onclick="sair()">Sair</button>
-    </header>
+    <aside id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-mark sm">M</div>
+        <span class="logo-texto sm">MyWay</span>
+      </div>
 
-    <nav>
-      <button onclick="mostrarSecao('perfil')">Perfil</button>
-      <button onclick="mostrarSecao('portfolio')">Portfólio</button>
-      <button onclick="mostrarSecao('certificados')">Certificados</button>
-      <button onclick="mostrarSecao('experiencias')">Experiências</button>
-      <button onclick="mostrarSecao('vagas')">Vagas</button>
-      <button onclick="mostrarSecao('dashboard')">Dashboard</button>
-    </nav>
+      <!-- Mini perfil -->
+      <div class="sidebar-perfil">
+        <div class="sidebar-avatar-wrap" onclick="document.getElementById('input-foto').click()" title="Trocar foto">
+          <div class="sidebar-avatar" id="sidebar-avatar-el"></div>
+          <div class="sidebar-avatar-overlay">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          </div>
+        </div>
+        <input type="file" id="input-foto" accept="image/*" style="display:none" onchange="handleFotoUpload(event)" />
+        <div class="sidebar-info">
+          <p class="user-name" id="sidebar-nome">—</p>
+          <p class="user-area" id="sidebar-area"></p>
+        </div>
+      </div>
 
-    <!-- Perfil -->
-    <section id="secao-perfil">
-      <h3>Perfil</h3>
-      <label>Biografia:</label>
-      <textarea id="perfil-bio" placeholder="Fale sobre você..." oninput="salvarPerfil()"></textarea>
-      <label>LinkedIn:</label>
-      <input type="url" id="perfil-linkedin" placeholder="https://linkedin.com/in/..." oninput="salvarPerfil()" />
-      <label>GitHub:</label>
-      <input type="url" id="perfil-github" placeholder="https://github.com/..." oninput="salvarPerfil()" />
-      <h4>Habilidades</h4>
-      <input type="text" id="input-habilidade" placeholder="Ex: JavaScript" />
-      <button onclick="adicionarHabilidade()">Adicionar</button>
-      <div id="lista-habilidades"></div>
-    </section>
+      <nav class="sidebar-nav">
+        <button class="nav-btn active" data-secao="meu-portfolio" onclick="mostrarSecao('meu-portfolio',this)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          Meu Portfólio
+        </button>
+        <button class="nav-btn" data-secao="perfil" onclick="mostrarSecao('perfil',this)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Editar Perfil
+        </button>
+        <button class="nav-btn" data-secao="portfolio" onclick="mostrarSecao('portfolio',this)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+          Projetos
+        </button>
+        <button class="nav-btn" data-secao="certificados" onclick="mostrarSecao('certificados',this)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
+          Certificados
+        </button>
+        <button class="nav-btn" data-secao="experiencias" onclick="mostrarSecao('experiencias',this)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+          Experiências
+        </button>
+      </nav>
 
-    <!-- Portfolio -->
-    <section id="secao-portfolio" style="display: none;">
-      <h3>Portfólio</h3>
-      <input type="text" id="proj-nome" placeholder="Nome do projeto" />
-      <textarea id="proj-desc" placeholder="Descrição do projeto"></textarea>
-      <input type="text" id="proj-tech" placeholder="Tecnologias usadas" />
-      <input type="url" id="proj-github" placeholder="Link do GitHub" />
-      <button onclick="adicionarProjeto()">Salvar Projeto</button>
-      <div id="lista-projetos"><p>Nenhum projeto adicionado ainda.</p></div>
-    </section>
+      <div class="sidebar-footer">
+        <button class="btn-link-perfil" onclick="copiarLinkPerfil()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          Copiar link do portfólio
+        </button>
+        <a class="btn-ver-perfil" id="btn-ver-perfil-link" href="#" target="_blank">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          Abrir em nova aba ↗
+        </a>
+        <button class="btn-sair" onclick="sair()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Sair
+        </button>
+      </div>
+    </aside>
 
-    <!-- Certificados -->
-    <section id="secao-certificados" style="display: none;">
-      <h3>Certificados</h3>
-      <input type="text" id="cert-nome" placeholder="Nome do certificado" />
-      <input type="text" id="cert-inst" placeholder="Instituição" />
-      <input type="month" id="cert-data" />
-      <button onclick="adicionarCertificado()">Salvar Certificado</button>
-      <div id="lista-certificados"><p>Nenhum certificado adicionado ainda.</p></div>
-    </section>
+    <main id="conteudo">
 
-    <!-- Experiencias -->
-    <section id="secao-experiencias" style="display: none;">
-      <h3>Experiências</h3>
-      <input type="text" id="exp-cargo" placeholder="Cargo / Função" />
-      <input type="text" id="exp-empresa" placeholder="Empresa / Instituição" />
-      <input type="month" id="exp-inicio" />
-      <input type="month" id="exp-fim" />
-      <textarea id="exp-desc" placeholder="Descrição das atividades"></textarea>
-      <button onclick="adicionarExperiencia()">Salvar Experiência</button>
-      <div id="lista-experiencias"><p>Nenhuma experiência adicionada ainda.</p></div>
-    </section>
+      <!-- ── MEU PORTFÓLIO (visualização) ── -->
+      <section id="secao-meu-portfolio" class="secao ativa">
+        <div class="secao-header-row">
+          <div>
+            <h2>Meu Portfólio</h2>
+            <p>Veja como seu portfólio aparece para outras pessoas</p>
+          </div>
+          <div class="header-actions">
+            <button class="btn-secundario" onclick="copiarLinkPerfil()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+              Copiar link
+            </button>
+            <a class="btn-primario" id="btn-abrir-nova-aba" href="#" target="_blank">
+              Abrir portfólio ↗
+            </a>
+          </div>
+        </div>
 
-    <!-- Vagas -->
-    <section id="secao-vagas" style="display: none;">
-      <h3>Buscar Vagas</h3>
-      <input type="text" id="vagas-busca" placeholder="Ex: frontend, javascript, designer..." />
-      <button onclick="buscarVagas()">Buscar</button>
-      <div id="vagas-resultado"><p>Digite algo para buscar vagas.</p></div>
-    </section>
+        <!-- Preview do portfólio dentro do dashboard -->
+        <div class="portfolio-preview-wrap">
 
-    <!-- Dash -->
-    <section id="secao-dashboard" style="display: none;">
-      <h3>Dashboard</h3>
-      <p>Projetos: <strong id="total-projetos">0</strong></p>
-      <p>Certificados: <strong id="total-certificados">0</strong></p>
-      <p>Experiências: <strong id="total-experiencias">0</strong></p>
-      <p>Habilidades: <strong id="total-habilidades">0</strong></p>
-    </section>
+          <!-- Hero -->
+          <div class="pv-hero">
+            <div class="pv-avatar-ring">
+              <div class="pv-avatar" id="pv-avatar"></div>
+              <div class="pv-status-dot"></div>
+            </div>
+            <h1 class="pv-nome" id="pv-nome">—</h1>
+            <p class="pv-area" id="pv-area"></p>
+            <p class="pv-bio" id="pv-bio"></p>
+            <div class="pv-links" id="pv-links"></div>
+          </div>
 
+          <!-- Completude -->
+          <div class="pv-completude" id="pv-completude-wrap">
+            <div class="pv-completude-inner">
+              <span class="pv-completude-label">Completude do perfil</span>
+              <strong class="pv-completude-pct" id="pv-pct">0%</strong>
+            </div>
+            <div class="barra-fundo"><div class="barra-progresso" id="pv-barra"></div></div>
+            <p class="pv-dica" id="pv-dica"></p>
+          </div>
+
+          <!-- Habilidades -->
+          <div class="pv-section" id="pv-sec-habilidades">
+            <div class="pv-section-label">Stack & Skills</div>
+            <h3 class="pv-section-titulo">Habilidades</h3>
+            <div class="pv-skills" id="pv-skills"></div>
+          </div>
+
+          <!-- Projetos -->
+          <div class="pv-section" id="pv-sec-projetos">
+            <div class="pv-section-label">Trabalhos</div>
+            <h3 class="pv-section-titulo">Projetos</h3>
+            <div class="pv-projetos-grid" id="pv-projetos"></div>
+          </div>
+
+          <!-- Certificados -->
+          <div class="pv-section" id="pv-sec-certificados">
+            <div class="pv-section-label">Formação</div>
+            <h3 class="pv-section-titulo">Certificados</h3>
+            <div id="pv-certificados"></div>
+          </div>
+
+          <!-- Experiências -->
+          <div class="pv-section" id="pv-sec-experiencias">
+            <div class="pv-section-label">Trajetória</div>
+            <h3 class="pv-section-titulo">Experiências</h3>
+            <div class="pv-exp-lista" id="pv-experiencias"></div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ── EDITAR PERFIL ── -->
+      <section id="secao-perfil" class="secao">
+        <div class="secao-header">
+          <h2>Editar Perfil</h2>
+          <p>Personalize como você se apresenta</p>
+        </div>
+
+        <!-- Foto de perfil -->
+        <div class="card">
+          <h3 class="card-titulo">Foto de perfil</h3>
+          <div class="foto-upload-area">
+            <div class="foto-preview-wrap">
+              <div class="foto-preview" id="foto-preview-el"></div>
+              <div class="foto-preview-overlay" onclick="document.getElementById('input-foto-perfil').click()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                <span>Trocar foto</span>
+              </div>
+            </div>
+            <input type="file" id="input-foto-perfil" accept="image/*" style="display:none" onchange="handleFotoUpload(event)" />
+            <div class="foto-info">
+              <p class="foto-info-titulo">Foto do portfólio</p>
+              <p class="foto-info-sub">Sua foto aparece no portfólio público e na barra lateral. Formatos: JPG, PNG, WebP.</p>
+              <button class="btn-secundario" onclick="document.getElementById('input-foto-perfil').click()">Escolher imagem</button>
+              <button class="btn-ghost" id="btn-remover-foto" onclick="removerFoto()" style="display:none">Remover foto</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Informações básicas -->
+        <div class="card">
+          <h3 class="card-titulo">Informações básicas</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Nome</label>
+              <input type="text" id="perfil-nome" placeholder="Seu nome completo" oninput="salvarPerfil()" />
+            </div>
+            <div class="form-group">
+              <label>Área de atuação</label>
+              <input type="text" id="perfil-area" placeholder="Ex: Desenvolvedor Back-end" oninput="salvarPerfil()" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Biografia</label>
+            <textarea id="perfil-bio" placeholder="Conte sua história, objetivos e o que te motiva..." oninput="salvarPerfil()" rows="4"></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>LinkedIn</label>
+              <input type="url" id="perfil-linkedin" placeholder="usuario-linkedin" oninput="salvarPerfil()" />
+            </div>
+            <div class="form-group">
+              <label>GitHub</label>
+              <input type="url" id="perfil-github" placeholder="usuario-github" oninput="salvarPerfil()" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Habilidades -->
+        <div class="card">
+          <h3 class="card-titulo">Habilidades</h3>
+          <div class="input-com-botao">
+            <input type="text" id="input-habilidade" placeholder="Ex: Java, Spring Boot, Docker..." onkeydown="if(event.key==='Enter') adicionarHabilidade()" />
+            <button class="btn-primario sm" onclick="adicionarHabilidade()">Adicionar</button>
+          </div>
+          <div id="lista-habilidades" class="tags-container"></div>
+        </div>
+
+        <div class="card" style="background:var(--acento-light);border-color:rgba(91,79,233,0.2)">
+          <p style="font-size:13px;color:var(--acento-text)">
+            As alterações são salvas automaticamente. Veja como ficou em: 
+            <button onclick="mostrarSecao('meu-portfolio')" style="background:none;border:none;color:var(--acento-text);font-weight:600;cursor:pointer;font-size:13px;padding:0;text-decoration:underline">Meu Portfólio</button>.
+          </p>
+        </div>
+      </section>
+
+      <!-- ── PROJETOS ── -->
+      <section id="secao-portfolio" class="secao">
+        <div class="secao-header">
+          <h2>Projetos</h2>
+          <p>Gerencie seus projetos e trabalhos realizados</p>
+        </div>
+        <div class="card form-card">
+          <h3 class="card-titulo">Novo projeto</h3>
+          <div class="form-group">
+            <label>Nome do projeto</label>
+            <input type="text" id="proj-nome" placeholder="Ex: TodoAPI — Spring Boot REST" />
+          </div>
+          <div class="form-group">
+            <label>Descrição</label>
+            <textarea id="proj-desc" placeholder="Descreva o projeto, objetivos e resultados..." rows="3"></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Tecnologias</label>
+              <input type="text" id="proj-tech" placeholder="Ex: Java, Spring Boot, PostgreSQL" />
+            </div>
+            <div class="form-group">
+              <label>Link GitHub</label>
+              <input type="url" id="proj-github" placeholder="https://github.com/..." />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Link do projeto (deploy)</label>
+            <input type="url" id="proj-url" placeholder="https://meu-projeto.railway.app" />
+          </div>
+          <div class="form-group-check">
+            <label class="check-label">
+              <input type="checkbox" id="proj-destaque" />
+              <span class="check-custom"></span>
+              <span>Fixar como projeto em destaque ⭐</span>
+            </label>
+          </div>
+          <button class="btn-primario" onclick="adicionarProjeto()">Salvar projeto</button>
+        </div>
+        <div id="lista-projetos"><p class="vazio-msg">Nenhum projeto adicionado ainda.</p></div>
+      </section>
+
+      <!-- ── CERTIFICADOS ── -->
+      <section id="secao-certificados" class="secao">
+        <div class="secao-header">
+          <h2>Certificados</h2>
+          <p>Suas conquistas e qualificações</p>
+        </div>
+        <div class="card form-card">
+          <h3 class="card-titulo">Novo certificado</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Nome do certificado</label>
+              <input type="text" id="cert-nome" placeholder="Ex: Java Spring Boot Completo" />
+            </div>
+            <div class="form-group">
+              <label>Instituição</label>
+              <input type="text" id="cert-inst" placeholder="Ex: Udemy, Alura..." />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Área</label>
+              <select id="cert-area">
+                <option value="">Selecionar área</option>
+                <option>Desenvolvimento Web</option>
+                <option>Mobile</option>
+                <option>Data Science</option>
+                <option>Design</option>
+                <option>DevOps</option>
+                <option>Idiomas</option>
+                <option>Outro</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Data de conclusão</label>
+              <input type="month" id="cert-data" />
+            </div>
+
+            <div class="form-group">
+              <label>Imagem do certificado</label>
+              <input type="file" id="cert-imagem" accept="image/png,image/jpeg,image/webp" />
+              <small style="color:var(--texto3)">
+                JPG, PNG ou WebP (máx. 5 MB)
+              </small>
+            </div>
+          </div>
+
+          <button class="btn-primario" onclick="adicionarCertificado()">
+            Salvar certificado
+          </button>
+        </div>
+        <div id="lista-certificados"><p class="vazio-msg">Nenhum certificado adicionado ainda.</p></div>
+      </section>
+
+      <!-- ── EXPERIÊNCIAS ── -->
+      <section id="secao-experiencias" class="secao">
+        <div class="secao-header">
+          <h2>Experiências</h2>
+          <p>Trajetória acadêmica e profissional</p>
+        </div>
+        <div class="card form-card">
+          <h3 class="card-titulo">Nova experiência</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Cargo / Função</label>
+              <input type="text" id="exp-cargo" placeholder="Ex: Desenvolvedor Back-end Jr." />
+            </div>
+            <div class="form-group">
+              <label>Empresa / Instituição</label>
+              <input type="text" id="exp-empresa" placeholder="Ex: Cavok Tecnologia, Unibrasil..." />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Tipo</label>
+              <select id="exp-tipo">
+                <option value="profissional">Profissional</option>
+                <option value="academica">Acadêmica</option>
+                <option value="voluntario">Voluntariado</option>
+                <option value="extracurricular">Extracurricular</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Início</label>
+              <input type="month" id="exp-inicio" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Fim <span class="label-hint">(deixe vazio se atual)</span></label>
+              <input type="month" id="exp-fim" />
+            </div>
+            <div class="form-group"></div>
+          </div>
+          <div class="form-group">
+            <label>Descrição das atividades</label>
+            <textarea id="exp-desc" placeholder="Descreva suas responsabilidades e conquistas..." rows="3"></textarea>
+          </div>
+          <button class="btn-primario" onclick="adicionarExperiencia()">Salvar experiência</button>
+        </div>
+        <div id="lista-experiencias"><p class="vazio-msg">Nenhuma experiência adicionada ainda.</p></div>
+      </section>
+
+    </main>
   </div>
-
-  <script src="script.js"></script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>
