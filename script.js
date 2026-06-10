@@ -305,21 +305,31 @@ window.adicionarProjeto = async () => {
     criadoEm: Date.now()
   };
 
-  const refDoc = await addDoc(collection(db, 'usuarios', uid, 'projetos'), dados);
-  estado.projetos.unshift({ id: refDoc.id, ...dados });
-  renderizarProjetos();
-  renderizarPreviewPortfolio();
-  limparCampos(['proj-nome','proj-desc','proj-tech','proj-github','proj-url']);
-  document.getElementById('proj-destaque').checked = false;
-  flash('Projeto salvo! ✓', 'sucesso');
+   try {
+    const refDoc = await addDoc(collection(db, 'usuarios', uid, 'projetos'), dados);
+    estado.projetos.unshift({ id: refDoc.id, ...dados });
+    renderizarProjetos();
+    renderizarPreviewPortfolio();
+    limparCampos(['proj-nome','proj-desc','proj-tech','proj-github','proj-url']);
+    document.getElementById('proj-destaque').checked = false;
+    flash('Projeto salvo! ✓', 'sucesso');
+ } catch (e) {
+    flash('Erro ao salvar projeto. Tente novamente.');
+  }
 };
+
+window.removerProjeto
 
 window.removerProjeto = async (id) => {
   if (!confirm('Deseja excluir este projeto?')) return;
-  await deleteDoc(doc(db, 'usuarios', uid, 'projetos', id));
-  estado.projetos = estado.projetos.filter(p => p.id !== id);
-  renderizarProjetos();
-  renderizarPreviewPortfolio();
+  try {
+    await deleteDoc(doc(db, 'usuarios', uid, 'projetos', id));
+    estado.projetos = estado.projetos.filter(p => p.id !== id);
+    renderizarProjetos();
+    renderizarPreviewPortfolio();
+  } catch (e) {
+    flash('Erro ao excluir projeto. Tente novamente.');
+  }
 };
 
 window.toggleDestaque = async (id) => {
@@ -376,17 +386,15 @@ window.adicionarCertificado = async () => {
     return;
   }
 
- if (!arquivo) {
-  flash('Selecione uma imagem do certificado!');
-  return;
-}
-
-if (arquivo.size > 5 * 1024 * 1024) {
+if (arquivo && arquivo.size > 5 * 1024 * 1024) {
   flash('Imagem muito grande. Máximo: 5 MB.');
   return;
 }
 
-  try {
+try {
+  let imagemUrl = '';
+
+  if (arquivo) {
     flash('Enviando certificado...');
 
     const formData = new FormData();
@@ -404,14 +412,17 @@ if (arquivo.size > 5 * 1024 * 1024) {
       throw new Error('Falha no upload');
     }
 
-    const dados = {
-      nome,
-      inst,
-      area: document.getElementById('cert-area').value,
-      data: document.getElementById('cert-data').value,
-      imagemUrl: upload.secure_url,
-      criadoEm: Date.now()
-    };
+    imagemUrl = upload.secure_url;
+  }
+
+  const dados = {
+    nome,
+    inst,
+    area: document.getElementById('cert-area').value,
+    data: document.getElementById('cert-data').value,
+    imagemUrl,
+    criadoEm: Date.now()
+  };
 
     const refDoc = await addDoc(
       collection(db, 'usuarios', uid, 'certificados'),
@@ -435,10 +446,14 @@ if (arquivo.size > 5 * 1024 * 1024) {
 
 window.removerCertificado = async (id) => {
   if (!confirm('Deseja excluir este certificado?')) return;
-  await deleteDoc(doc(db, 'usuarios', uid, 'certificados', id));
-  estado.certificados = estado.certificados.filter(c => c.id !== id);
-  renderizarCertificados();
-  renderizarPreviewPortfolio();
+  try {
+    await deleteDoc(doc(db, 'usuarios', uid, 'certificados', id));
+    estado.certificados = estado.certificados.filter(c => c.id !== id);
+    renderizarCertificados();
+    renderizarPreviewPortfolio();
+  } catch (e) {
+    flash('Erro ao excluir certificado. Tente novamente.');
+  }
 };
 
 function renderizarCertificados() {
@@ -500,21 +515,29 @@ window.adicionarExperiencia = async () => {
     desc:     document.getElementById('exp-desc').value.trim(),
     criadoEm: Date.now()
   };
-  const refDoc = await addDoc(collection(db, 'usuarios', uid, 'experiencias'), dados);
-  estado.experiencias.unshift({ id: refDoc.id, ...dados });
-  renderizarExperiencias();
-  renderizarPreviewPortfolio();
-  limparCampos(['exp-cargo','exp-empresa','exp-inicio','exp-fim','exp-desc']);
-  document.getElementById('exp-tipo').value = 'profissional';
-  flash('Experiência salva! ✓', 'sucesso');
+  try {
+    const refDoc = await addDoc(collection(db, 'usuarios', uid, 'experiencias'), dados);
+    estado.experiencias.unshift({ id: refDoc.id, ...dados });
+    renderizarExperiencias();
+    renderizarPreviewPortfolio();
+    limparCampos(['exp-cargo','exp-empresa','exp-inicio','exp-fim','exp-desc']);
+    document.getElementById('exp-tipo').value = 'profissional';
+    flash('Experiência salva! ✓', 'sucesso');
+ } catch (e) {
+    flash('Erro ao salvar experiência. Tente novamente.');
+  }
 };
 
 window.removerExperiencia = async (id) => {
   if (!confirm('Deseja excluir esta experiência?')) return;
-  await deleteDoc(doc(db, 'usuarios', uid, 'experiencias', id));
-  estado.experiencias = estado.experiencias.filter(e => e.id !== id);
-  renderizarExperiencias();
-  renderizarPreviewPortfolio();
+  try {
+    await deleteDoc(doc(db, 'usuarios', uid, 'experiencias', id));
+    estado.experiencias = estado.experiencias.filter(e => e.id !== id);
+    renderizarExperiencias();
+    renderizarPreviewPortfolio();
+  } catch (e) {
+    flash('Erro ao excluir experiência. Tente novamente.');
+  }
 };
 
 function renderizarExperiencias() {
