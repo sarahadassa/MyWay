@@ -17,9 +17,12 @@ const firebaseConfig = {
 };
 
 const app  = initializeApp(firebaseConfig);
+// autenticação
 const auth = getAuth(app);
+// banco de dados
 const db   = getFirestore(app);
 
+// config firebase
 const CLOUD_NAME    = "dt88i9c7n";
 const UPLOAD_PRESET = "myway-web";
 
@@ -49,7 +52,7 @@ let estado = {
   experiencias: []
 };
 
-// Auth listener - Fica de olho na autenticação do usuário para carregar os dados do Firebase quando fizer login, ou limpar tudo quando fizer logout. Garante que o usuário veja as informações corretas e mantenha a sessão ativa.
+// carrega informações do firebase, popula estado e renderiza com renderizarTudo()
 
 onAuthStateChanged(auth, async (user) => {
   if (user) {
@@ -96,7 +99,17 @@ window.acaoAuth = async () => {
       const nome = document.getElementById('input-nome').value.trim();
       const area = document.getElementById('input-area').value.trim();
       if (!nome) { erroEl.textContent = 'Digite seu nome.'; btn.disabled = false; btn.textContent = 'Criar conta →'; return; }
+      // cria user no firebase
       const cred = await createUserWithEmailAndPassword(auth, email, senha);
+
+      // coleção 1 só - usuarios
+      // documento com id
+      // campos - simples dentro do perfil
+      // subcoleções - blocos
+
+      // sobrescreve tudo no doc
+
+      // cria o documento no firebase
       await setDoc(doc(db, 'usuarios', cred.user.uid), {
         perfil: { nome, area, bio: '', linkedin: '', github: '', fotoUrl: '' },
         habilidades: []
@@ -130,7 +143,7 @@ window.sair = async () => {
   mostrarTela('auth');
 };
 
-// Firestore: funções para carregar, salvar, atualizar e excluir dados do Firebase. Cada seção (perfil, habilidades, projetos, certificados, experiências) tem suas próprias funções para lidar com as operações de CRUD.
+// carrega do firestore e popula var estado.
 
 async function carregarTudoDoFirebase() {
   try {
@@ -157,6 +170,7 @@ async function carregarColecao(nome) {
 let timerPerfil = null;
 
 async function salvarPerfilNoFirebase() {
+  // atualiza dados com merge 
   if (!uid) return;
   await setDoc(doc(db, 'usuarios', uid), {
     perfil:      estado.perfil,
@@ -200,11 +214,13 @@ window.handleFotoUpload = async (event) => {
     formData.append("file", file);
     formData.append("upload_preset", UPLOAD_PRESET);
 
+    // envia pro claudinary
     const response = await fetch(
       `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
       { method: "POST", body: formData }
     );
 
+    // claudinary devolve em json
     const data = await response.json();
 
     if (!data.secure_url) throw new Error("Falha no upload");
@@ -301,9 +317,15 @@ window.adicionarProjeto = async () => {
     criadoEm: Date.now()
   };
 
+  // addDoc gera um id novo
+
    try {
+    // persiste no firebase
+    // sub coleção
     const refDoc = await addDoc(collection(db, 'usuarios', uid, 'projetos'), dados);
+    // atualiza var estado com unshift
     estado.projetos.unshift({ id: refDoc.id, ...dados });
+    // renderiza
     renderizarProjetos();
     renderizarPreviewPortfolio();
     limparCampos(['proj-nome','proj-desc','proj-tech','proj-github','proj-url']);
