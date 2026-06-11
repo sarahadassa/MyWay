@@ -59,8 +59,8 @@ let estado = {
 
 onAuthStateChanged(auth, async (user) => {
   if (user) {
-    uid = user.uid;
-    await carregarTudoDoFirebase();
+    uid = user.uid; // salva o uid separado
+    await carregarTudoDoFirebase();  // popula o estado
     mostrarTela('dashboard');
     atualizarCabecalho();
     renderizarTudo();
@@ -68,7 +68,7 @@ onAuthStateChanged(auth, async (user) => {
     atualizarLinkPortfolio();
   } else {
     uid = null;
-    mostrarTela('auth');
+    mostrarTela('auth'); // manda pra tela de login
   }
 });
 
