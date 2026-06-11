@@ -1,7 +1,3 @@
-// =========================================
-// MyWay — script.js v3
-// =========================================
-
 import { initializeApp }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged }
@@ -9,7 +5,7 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, si
 import { getFirestore, doc, setDoc, getDoc, collection, addDoc, getDocs, deleteDoc, updateDoc, query, orderBy }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// ─── Config ──────────────────────────────
+// Config - Configurações do Firebase para conectar o app ao projeto no console do Firebase. Contém chaves e identificadores únicos que permitem autenticação e acesso ao banco de dados Firestore.
 
 const firebaseConfig = {
   apiKey: "AIzaSyCGfBv2-jMES3oO6FKJZfmND0WmLQXBCyU",
@@ -42,7 +38,7 @@ window.flash = function(msg, tipo = 'erro') {
   setTimeout(() => t.remove(), 3000);
 }
 
-// ─── Estado ──────────────────────────────
+// Estado - Guarda tudo que o usuário preenche para renderizar e salvar no Firebase
 
 let uid    = null;
 let estado = {
@@ -53,7 +49,7 @@ let estado = {
   experiencias: []
 };
 
-// ─── Auth listener ───────────────────────
+// Auth listener - Fica de olho na autenticação do usuário para carregar os dados do Firebase quando fizer login, ou limpar tudo quando fizer logout. Garante que o usuário veja as informações corretas e mantenha a sessão ativa.
 
 onAuthStateChanged(auth, async (user) => {
   if (user) {
@@ -70,7 +66,7 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-// ─── Auth ────────────────────────────────
+// Auth - funções para login, cadastro, logout e troca de abas entre login e cadastro. Usa Firebase Authentication para gerenciar usuários e sessões de forma segura e fácil.
 
 let modoAuth = 'login';
 
@@ -134,7 +130,7 @@ window.sair = async () => {
   mostrarTela('auth');
 };
 
-// ─── Firestore: carregar ─────────────────
+// Firestore: funções para carregar, salvar, atualizar e excluir dados do Firebase. Cada seção (perfil, habilidades, projetos, certificados, experiências) tem suas próprias funções para lidar com as operações de CRUD.
 
 async function carregarTudoDoFirebase() {
   try {
@@ -156,7 +152,7 @@ async function carregarColecao(nome) {
   return snap.docs.map(d => ({ id: d.id, ...d.data() }));
 }
 
-// ─── Perfil ──────────────────────────────
+// Perfil - Permite editar informações pessoais como nome, área de atuação, bio e links para LinkedIn e GitHub. Essas informações aparecem no portfólio para apresentar o usuário aos visitantes.
 
 let timerPerfil = null;
 
@@ -186,7 +182,7 @@ window.salvarPerfil = () => {
   }, 500);
 };
 
-// ─── Upload de foto ──────────────────────
+// Upload de foto - Envia a imagem para a nuvem e guarda o link no Firebase. Usa Cloudinary para hospedagem rápida e gratuita de imagens
 
 window.handleFotoUpload = async (event) => {
   const file = event.target.files[0];
@@ -253,7 +249,7 @@ function renderizarFotosPerfil() {
   }
 }
 
-// ─── Habilidades ─────────────────────────
+// Habilidades - Permite adicionar habilidades técnicas ou interpessoais, com nome e opção de destacar no portfólio. Essas habilidades aparecem no portfólio para mostrar os pontos fortes do usuário.
 
 window.adicionarHabilidade = async () => {
   const input = document.getElementById('input-habilidade');
@@ -289,7 +285,7 @@ function renderizarHabilidades() {
   `).join('');
 }
 
-// ─── Projetos ────────────────────────────
+// Projetos - Permite adicionar projetos pessoais ou profissionais, com nome, descrição, tecnologias usadas, links e opção de destacar no portfólio. Esses projetos aparecem no portfólio para mostrar as realizações do usuário.
 
 window.adicionarProjeto = async () => {
   const nome = document.getElementById('proj-nome').value.trim();
@@ -374,7 +370,7 @@ function renderizarProjetos() {
   `).join('');
 }
 
-// ─── Certificados ────────────────────────
+// Certificados - Permite adicionar certificados de cursos, workshops ou eventos, com nome, instituição, data e imagem do certificado. Esses certificados aparecem no portfólio para mostrar as qualificações do usuário.
 
 window.adicionarCertificado = async () => {
   const nome = document.getElementById('cert-nome').value.trim();
@@ -500,7 +496,7 @@ function renderizarCertificados() {
   }).join('');
 }
 
-// ─── Experiências ────────────────────────
+// Experiências - Permite adicionar experiências profissionais, acadêmicas, voluntariado ou extracurriculares, com cargo, empresa, período e descrição. Essas experiências aparecem no portfólio para mostrar a trajetória do usuário.
 
 window.adicionarExperiencia = async () => {
   const cargo   = document.getElementById('exp-cargo').value.trim();
@@ -566,7 +562,7 @@ function renderizarExperiencias() {
   `).join('');
 }
 
-// ─── Preview do portfólio (dashboard) ────
+// Preview do portfólio (dashboard) - Renderiza uma prévia do portfólio com base nas informações preenchidas, e calcula a porcentagem de completude do perfil para incentivar o usuário a preencher tudo.
 
 function renderizarPreviewPortfolio() {
   const p        = estado.perfil;
@@ -709,7 +705,7 @@ function renderizarPreviewPortfolio() {
   }
 }
 
-// ─── Link público ─────────────────────────
+// Link público - Gera um link para o perfil público e permite copiar para a área de transferência.
 
 function atualizarLinkPortfolio() {
   const link = gerarLinkPortfolio();
@@ -730,7 +726,7 @@ window.copiarLinkPerfil = () => {
     .catch(() => flash('Não foi possível copiar.'));
 };
 
-// ─── UI helpers ──────────────────────────
+// UI helpers - funções para mostrar/ocultar telas, renderizar o conteúdo e formatar dados.
 
 function mostrarTela(nome) {
   document.getElementById('tela-auth').style.display      = nome === 'auth'      ? 'flex' : 'none';
@@ -787,7 +783,7 @@ function renderizarTudo() {
   renderizarPreviewPortfolio();
 }
 
-// ─── Utilitários ─────────────────────────
+// Utilitários - funções auxiliares para gerar IDs, escapar HTML, otimizar imagens, formatar datas e limpar campos.
 
 function gerarId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 5);

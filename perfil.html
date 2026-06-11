@@ -39,7 +39,8 @@
       min-height: 100vh;
     }
 
-    /* ── HERO ── */
+    /* HERO - A seção de destaque no topo do portfólio, apresentando o nome do usuário, área de atuação, uma breve biografia e links para redes sociais ou contato. O design é visualmente atraente, com um avatar circular animado e um fundo com efeito de ruído sutil para dar profundidade.
+    */
     .hero {
       position: relative;
       padding: 72px 24px 56px;
@@ -115,7 +116,8 @@
     .hero-link.secundario { background: var(--bg3); color: var(--texto2); border: 1px solid var(--borda); }
     .hero-link.secundario:hover { color: var(--texto); border-color: rgba(255,255,255,0.2); transform: translateY(-1px); }
 
-    /* ── NAV ÂNCORA ── */
+    /* NAV ÂNCORA  - Barra de navegação fixa que aparece quando o usuário rola a página, permitindo acesso rápido às seções principais do portfólio (Habilidades, Projetos, Certificados, Experiências). Destaca a seção ativa conforme o usuário navega.
+    */
     .nav-ancora {
       position: sticky; top: 0; z-index: 50;
       background: rgba(14,14,16,0.85); backdrop-filter: blur(12px);
@@ -145,10 +147,12 @@
     .ancora-btn.active { color: var(--texto); }
     .ancora-btn.active::after { transform: scaleX(1); }
 
-    /* ── CONTAINER ── */
+    /* CONTAINER - Limita a largura do conteúdo principal e centraliza na página, garantindo uma leitura confortável e um layout organizado. O padding interno garante espaçamento adequado nas laterais e na parte inferior para evitar que o conteúdo fique colado nas bordas da tela.
+    */
     .container { max-width: 900px; margin: 0 auto; padding: 0 24px 80px; }
 
-    /* ── SECTION ── */
+    /* SECTION - Define o estilo das seções principais do portfólio, como Habilidades, Projetos, Certificados e Experiências. Cada seção tem um título destacado e um layout específico para organizar as informações de forma clara e atraente.
+    */
     .secao { padding-top: 64px; }
 
     .secao-label {
@@ -161,7 +165,8 @@
       font-weight: 400; margin-bottom: 28px; line-height: 1.2;
     }
 
-    /* ── HABILIDADES ── */
+    /* HABILIDADES - Exibe as habilidades do usuário em um layout de tags, com um ponto colorido indicando o nível de proficiência (básico, intermediário, avançado). As tags têm um efeito hover que destaca a habilidade e torna a interação mais dinâmica.
+    */
     .skills-grid { display: flex; flex-wrap: wrap; gap: 10px; }
 
     .skill-tag {
@@ -178,7 +183,8 @@
 
     .skill-dot { width: 6px; height: 6px; background: var(--acento); border-radius: 50%; }
 
-    /* ── PROJETOS ── */
+    /* PROJETOS - Exibe os projetos do usuário em um layout de grade responsivo, com cards que destacam o nome, descrição, tecnologias usadas e links para visualização ou código-fonte. Os projetos em destaque recebem uma badge especial para chamar a atenção dos visitantes.
+    */
     .projetos-grid {
       display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px;
     }
@@ -226,7 +232,8 @@
     }
     .projeto-link:hover { color: var(--texto); }
 
-    /* ── CERTIFICADOS ── */
+    /* CERTIFICADOS - Exibe os certificados do usuário em uma lista vertical, com cards que mostram o nome, instituição, data e área de especialização. Cada certificado tem um ícone representativo e uma badge indicando sua categoria.
+    */
     .certs-lista { display: flex; flex-direction: column; gap: 12px; }
 
     .cert-card {
@@ -252,7 +259,8 @@
       font-size: 12px; color: var(--verde); font-weight: 500; white-space: nowrap;
     }
 
-    /* ── EXPERIÊNCIAS ── */
+    /* EXPERIÊNCIAS - Exibe as experiências profissionais, acadêmicas, voluntárias e extracurriculares do usuário em uma linha do tempo vertical, com detalhes sobre o cargo, empresa/instituição, período e descrição. Cada experiência tem um marcador visual para facilitar a leitura e destacar a trajetória do usuário.
+    */
     .exp-lista { position: relative; padding-left: 28px; }
 
     .exp-lista::before {
@@ -285,7 +293,8 @@
     .exp-tipo.voluntario      { background: var(--verde-bg); color: var(--verde); }
     .exp-tipo.extracurricular { background: rgba(244,114,182,0.1); color: #F9A8D4; }
 
-    /* ── ESTADO VAZIO ── */
+    /* ESTADO VAZIO - Exibe uma mensagem centralizada quando não há dados para mostrar em uma seção, como "Nenhuma habilidade adicionada" ou "Sem projetos no portfólio". O estilo é discreto, com um fundo levemente destacado e uma borda pontilhada para indicar que a seção está vazia, incentivando o usuário a adicionar conteúdo.
+    */
     .vazio {
       text-align: center; padding: 40px 20px;
       color: var(--texto3); font-size: 14px;
@@ -293,7 +302,8 @@
       border-radius: var(--raio);
     }
 
-    /* ── LOADING / 404 ── */
+    /*  LOADING / 404 - Telas de carregamento e erro que aparecem durante a carga do portfólio ou quando o portfólio não é encontrado. A tela de carregamento tem uma animação simples para indicar progresso, enquanto a tela de erro exibe uma mensagem clara e um link para criar um novo portfólio.
+    */
     #loading-screen {
       position: fixed; inset: 0; background: var(--bg);
       display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -309,14 +319,15 @@
     }
     @keyframes load { from { width: 0% } to { width: 100% } }
 
-    /* ── FOOTER ── */
+    /* FOOTER */
     .footer {
       text-align: center; padding: 24px; font-size: 13px;
       color: var(--texto3); border-top: 1px solid var(--borda); margin-top: 40px;
     }
     .footer a { color: var(--acento2); text-decoration: none; }
 
-    /* ── RESPONSIVO ── */
+    /* RESPONSIVO - Adapta o layout para telas menores, como smartphones, reorganizando os elementos para melhor usabilidade. A grade de projetos passa a ser uma coluna única, e os cards de certificados se alinham verticalmente para facilitar a leitura em dispositivos móveis.
+    */
     @media (max-width: 640px) {
       .projetos-grid { grid-template-columns: 1fr; }
       .cert-card { flex-direction: column; align-items: flex-start; }

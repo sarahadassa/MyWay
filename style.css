@@ -1,7 +1,3 @@
-/* =========================================
-   MyWay — Design System v3
-   ========================================= */
-
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
@@ -42,9 +38,10 @@ body {
   font-size: 15px;
 }
 
-/* ─────────────────────────────────────────
-   AUTH
-───────────────────────────────────────── */
+/* 
+   AUTH - Estilos para as telas de autenticação (login e cadastro), incluindo o layout centralizado, o card de entrada com animação de fade, os campos de formulário estilizados, os botões primários e secundários, e as abas para alternar entre login e cadastro. 
+   A tela de autenticação também inclui um fundo com um efeito de brilho sutil para dar destaque ao card de entrada.*/
+
 
 #tela-auth {
   min-height: 100vh;
@@ -144,9 +141,8 @@ body {
 
 .btn-primario.full { width: 100%; justify-content: center; }
 
-/* ─────────────────────────────────────────
-   FORMULÁRIOS
-───────────────────────────────────────── */
+/* 
+   FORMULÁRIOS - Estilos para os campos de formulário, incluindo labels, inputs e textareas. */
 
 .form-group {
   display: flex; flex-direction: column; gap: 6px;
@@ -222,9 +218,10 @@ select {
   content: '✓'; font-size: 11px; color: white; font-weight: 700;
 }
 
-/* ─────────────────────────────────────────
-   BOTÕES
-───────────────────────────────────────── */
+/* 
+   BOTÕES - Estilos para os botões primários, secundários e ghost, incluindo variações de tamanho, estados de hover e active, e estilos para botões de link. 
+   Os botões são projetados para serem versáteis e podem ser usados em diferentes contextos dentro do dashboard, como ações principais, secundárias ou links para outras seções.
+*/
 
 .btn-primario {
   font-family: var(--fonte-b); font-size: 14px; font-weight: 500;
@@ -259,9 +256,9 @@ select {
 
 button { cursor: pointer; }
 
-/* ─────────────────────────────────────────
-   SIDEBAR
-───────────────────────────────────────── */
+/*
+   SIDEBAR - Estilos para a barra lateral do dashboard, incluindo o layout flexível, o mini perfil com foto, nome e área de atuação, os botões de navegação com ícones, e o rodapé com links para perfil e logout.
+*/
 
 #tela-dashboard { display: flex; min-height: 100vh; }
 
@@ -365,9 +362,9 @@ button { cursor: pointer; }
 }
 .btn-sair:hover { color: rgba(255,255,255,0.6); }
 
-/* ─────────────────────────────────────────
-   CONTEÚDO
-───────────────────────────────────────── */
+/* 
+   CONTEÚDO - Estilos para a área de conteúdo do dashboard, incluindo o layout flexível, as seções com animação de fade, os headers das seções, e os estilos para os cards de projetos, certificados e experiências.
+*/
 
 #conteudo {
   margin-left: var(--sidebar-w);
@@ -401,9 +398,9 @@ button { cursor: pointer; }
 .secao-header-row p { color: var(--texto2); font-size: 14px; }
 .header-actions { display: flex; gap: 10px; align-items: center; }
 
-/* ─────────────────────────────────────────
-   CARDS
-───────────────────────────────────────── */
+/* 
+   CARDS - Estilos para os cards de projetos, certificados e experiências, incluindo o layout flexível, o background, as bordas, os títulos e as descrições. Os cards são projetados para destacar as informações mais importantes de cada item, como nome do projeto, cargo ocupado ou título do certificado, com uma hierarquia visual clara e um design moderno.
+*/
 
 .card {
   background: var(--bg2);
@@ -418,9 +415,9 @@ button { cursor: pointer; }
 }
 .form-card { margin-bottom: 24px; }
 
-/* ─────────────────────────────────────────
-   FOTO UPLOAD
-───────────────────────────────────────── */
+/* 
+   FOTO UPLOAD - Estilos para a área de upload de foto, incluindo o layout flexível, a prévia da foto em um círculo, o overlay com opções de trocar ou remover a foto, e as informações sobre a foto. A área de upload é projetada para ser intuitiva e fácil de usar, permitindo que os usuários personalizem seu perfil com uma imagem que os represente.
+*/
 
 .foto-upload-area { display: flex; align-items: center; gap: 24px; }
 
@@ -450,9 +447,9 @@ button { cursor: pointer; }
 .foto-info-titulo { font-size: 14px; font-weight: 600; color: var(--texto); margin-bottom: 4px; }
 .foto-info-sub { font-size: 13px; color: var(--texto2); margin-bottom: 12px; line-height: 1.5; }
 
-/* ─────────────────────────────────────────
-   PORTFOLIO PREVIEW (dentro do dashboard)
-───────────────────────────────────────── */
+/* 
+   PORTFOLIO PREVIEW (dentro do dashboard) - Estilos para a prévia do portfólio exibida dentro do dashboard, incluindo o layout flexível, o background escuro, as seções de hero, habilidades, projetos, certificados e experiências, e os estilos para cada elemento dentro dessas seções. A prévia do portfólio é projetada para dar aos usuários uma visão geral de como seu portfólio será exibido para os visitantes, com um design moderno e atraente que destaca as informações mais importantes.
+   */
 
 .portfolio-preview-wrap {
   background: #0E0E10;
@@ -679,7 +676,7 @@ button { cursor: pointer; }
 .pv-exp-tipo.voluntario    { background: rgba(52,211,153,0.1); color: #34D399; }
 .pv-exp-tipo.extracurricular { background: rgba(244,114,182,0.1); color: #F9A8D4; }
 
-/* Estado vazio no preview */
+/* Estado vazio no preview  */
 .pv-vazio {
   text-align: center; padding: 32px 20px;
   color: #55555F; font-size: 14px;
@@ -688,9 +685,9 @@ button { cursor: pointer; }
   border-radius: 12px;
 }
 
-/* ─────────────────────────────────────────
-   BARRA DE PROGRESSO
-───────────────────────────────────────── */
+/* 
+   BARRA DE PROGRESSO - Estilos para a barra de progresso que indica a completude do portfólio, incluindo o fundo da barra, a barra de progresso em si, e a animação suave ao atualizar o progresso. A barra de progresso é projetada para ser visualmente atraente e fácil de entender, com um design moderno que se encaixa no estilo geral do dashboard.
+*/
 
 .barra-fundo {
   height: 6px; background: rgba(255,255,255,0.06); border-radius: 100px; overflow: hidden;
@@ -701,9 +698,9 @@ button { cursor: pointer; }
   border-radius: 100px; width: 0%; transition: width 0.7s cubic-bezier(0.4,0,0.2,1);
 }
 
-/* ─────────────────────────────────────────
-   TAGS / HABILIDADES (dashboard)
-───────────────────────────────────────── */
+/* 
+   TAGS / HABILIDADES (dashboard) - Estilos para os tags e habilidades exibidos no dashboard, incluindo o contêiner flexível, os tags individuais com botões de exclusão, e as animações de fade. Os tags são projetados para ser visualmente atraentes e fáceis de usar, permitindo que os usuários organizem e destaquem suas habilidades de forma clara e intuitiva.
+*/
 
 .tags-container {
   display: flex; flex-wrap: wrap; gap: 8px;
@@ -723,9 +720,9 @@ button { cursor: pointer; }
 }
 .tag button:hover { color: var(--red); }
 
-/* ─────────────────────────────────────────
-   ITEM CARDS (projetos, certs, exps)
-───────────────────────────────────────── */
+/* 
+   ITEM CARDS (projetos, certs, exps) - Estilos para os cards de projetos, certificados e experiências, incluindo o layout flexível, o background, as bordas, os títulos e as descrições. Os cards são projetados para destacar as informações mais importantes de cada item, como nome do projeto, cargo ocupado ou título do certificado, com uma hierarquia visual clara e um design moderno.
+*/
 
 .item-card {
   background: var(--bg2);
@@ -812,9 +809,9 @@ button { cursor: pointer; }
   border-radius: 8px;
 }
 
-/* ─────────────────────────────────────────
-   UTILITÁRIOS
-───────────────────────────────────────── */
+/*
+   UTILITÁRIOS - Estilos para mensagens de estado vazio, garantindo que sejam visualmente distintas e informativas, com um design que se encaixe no tema geral do dashboard.
+*/
 
 .vazio-msg {
   color: var(--texto3); font-size: 14px; text-align: center; padding: 36px;
@@ -822,9 +819,9 @@ button { cursor: pointer; }
   border-radius: var(--raio-lg);
 }
 
-/* ─────────────────────────────────────────
-   RESPONSIVO
-───────────────────────────────────────── */
+/*
+   RESPONSIVO - Estilos para garantir que o dashboard seja utilizável e visualmente agradável em dispositivos móveis, ajustando a largura da sidebar, ocultando-a em telas muito pequenas e adaptando o layout do conteúdo para uma única coluna.
+*/
 
 @media (max-width: 860px) {
   :root { --sidebar-w: 210px; }
